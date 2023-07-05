@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+*{
+    font-family: 'Roboto', sans-serif;
+}
+
+body{
+
+    background: linear-gradient(to top right, #5375C2, #56A5B5);
+}
+.navegador{
+    background-color: #3D5061;
+    border-bottom: 1px solid black;
+}
+
+.izquierda{
+    background-color: #48752C;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+.datos{
+    border: 3px solid #383F75;
+    border-radius: 10px;
+    padding: 10px;
+}
+footer{
+    background-color: #3D5061;
+    color: white;
+}
