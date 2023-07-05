@@ -71,5 +71,12 @@ class RegistroView(TemplateView):
 class TareasView(TemplateView):
     template_name = 'tareas.html'
     def get(self, request, *args, **kwargs):
-        title = "Tareas"
-        return render(request, self.template_name, {'titulo': title})
+        title = "Visualizador de Tareas"
+        primer_nombre = request.user.first_name
+        primer_apellido = request.user.last_name
+        context = {
+            "titulo": title,
+            "primer_nombre": primer_nombre,
+            "primer_apellido": primer_apellido
+        }
+        return render(request, self.template_name, context)
