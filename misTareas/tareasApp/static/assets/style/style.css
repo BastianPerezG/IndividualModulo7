@@ -2,6 +2,7 @@
 
 *{
     font-family: 'Roboto', sans-serif;
+    margin: 0px;
 }
 
 body{
@@ -12,17 +13,25 @@ body{
     background-color: #3D5061;
     border-bottom: 1px solid black;
 }
-
-.izquierda{
-    background-color: #48752C;
+.titulo{
+        background-color: #163E61;
+        font-weight: bolder;
+}
+.contenedorDerecho{
+    background-color: #3D5061;
+    padding: 10px;
+}
+.seccion1{
+    background-color: #AD874B;
     color: white;
     border-radius: 10px;
     padding: 10px;
 }
-.datos{
-    border: 3px solid #383F75;
+.redesSociales{
+    background-color: #5C87AD;
     border-radius: 10px;
     padding: 10px;
+    color: white;
 }
 footer{
     background-color: #3D5061;

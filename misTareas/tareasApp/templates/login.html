@@ -28,6 +28,9 @@
                     <input type="password" class="form-control" id="id_password" name="password" placeholder="Ingrese su Contraseña" required>
                     {% comment %} {{ form.password }} {% endcomment %}
                 </div>
+                <div class="text-center mt-3">
+                    <h6>¿No posee una cuenta? Regístrese<a class="ms-1" href="{% url 'registrarse' %}">aquí</a></h6>
+                </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary mt-3">Ingresar</button>
                 </div>
