@@ -16,7 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth.views import LogoutView
+from django.contrib.auth.decorators import login_required
+from tareasApp.views import LandingPageView, RegistroView, IngresoView, TareasView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', LandingPageView.as_view(), name='TaskWise'),
+    path("login/", IngresoView.as_view(), name="login"),
+    path('logout/', LogoutView.as_view(next_page='TaskWise'), name='logout'),
+    path("registrarse", RegistroView.as_view(), name="registrarse"),
+    path("tareas", login_required(TareasView.as_view()), name="tareas"),
 ]
