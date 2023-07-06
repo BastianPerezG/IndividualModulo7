@@ -2,5 +2,33 @@
 {%block title%}{{titulo}}{%endblock%}
 {%block content%}
 <h1 class="text-center text-light">{{titulo}}</h1>
-<h3 class="text-light">Bienvenido {{primer_nombre}}{{primer_apellido}} a la página principal de tareas</h3>
+<div class="container pb-3">
+    <div class="row mt-3">
+        <div class="col-12 col-md-6">
+            <h1>Tareas</h1>
+        </div>
+        <div class="col-12 col-md-6" style="text-align: right;">
+            <a href="{% url 'agregar_tarea' %}" class="btn btn-primary">Agregar Tarea</a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        {% for tarea in tareas %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ tarea.titulo }}</h5>
+                    <p class="card-text">{{ pedido.fecha }}</p>
+                    <a href="{% url 'editar_tarea' tarea.id %}" class="btn btn-primary">Editar</a>
+                    <a class="btn btn-danger" href="{% url 'eliminar_tarea' tarea.id %}">Eliminar</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p>No hay pedidos</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {%endblock%}

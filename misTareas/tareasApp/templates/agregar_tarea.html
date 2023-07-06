@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{%block title%}{{titulo}}{%endblock%}
+{%block content%}
+<div class="container pb-3">
+    <div class="row mt-3">
+        <div class="col-12 col-md-12">
+            <h1>Pedidos</h1>
+        </div>
+        <div class="col-12 col-md-12">
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{% url 'pedidos' %}" class="btn btn-secondary">Volver</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

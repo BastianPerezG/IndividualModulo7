@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
+from tareasApp.models import Etiqueta, Estado
 
 class FormularioLogin(forms.Form):
     username = forms.CharField(label='NombreUsuario', required=True,
@@ -96,3 +97,28 @@ class FormularioRegistro(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'first_name', 'last_name','email', 'password1', 'password2')
+
+class FormularioTareas(forms.Form):
+    opciones_estado = Estado.objects.all().values_list('id', 'nombre').order_by('nombre')
+    OPCIONES_ESTADO = [(1, 'Pendiente'), (2, 'En Progreso'), (3, 'Completada')]
+    opciones_etiqueta = Etiqueta.objects.all().values_list('id', 'nombre').order_by('nombre')
+    OPCIONES_ETIQUETA = [(1, 'Trabajo'), (2, 'Hogar'), (3, 'Estudio')]
+
+    id = forms.CharField(widget=forms.HiddenInput(), required=False)
+    titulo = forms.CharField(label="Titulo", required=True,
+                            error_messages={
+                                'required': 'El titulo es requerido'},
+                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}))
+    fecha = forms.DateField(label="FechaVencimiento", required=True,
+                            error_messages={
+                                'required': 'La fecha de vencimiento es requerida'},
+                            widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
+                            help_text='Ingrese la fecha de vencimiento de la tarea')
+    estado = forms.ChoiceField(choices=OPCIONES_ESTADO, required=True,
+                                error_messages={'required': 'El estado de la tarea es requerida'},
+                                widget=forms.Select(attrs={'class': 'form-control'}),
+                                help_text='Seleccione el estado de la tarea')
+    forma_pago = forms.ChoiceField(choices=OPCIONES_ETIQUETA, required=True,
+                                    error_messages={'required': 'La etiqueta es requerida'},
+                                    widget=forms.Select(attrs={'class': 'form-control'}),
+                                    help_text='Seleccione la etiqueta de la tarea')
