@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.views.generic import TemplateView, DeleteView
+from django.views.generic import TemplateView, DeleteView, View
 from django.contrib.auth import authenticate, login
-from tareasApp.form import FormularioLogin, FormularioRegistro, FormularioTareas
+from tareasApp.form import FormularioLogin, FormularioRegistro, FormularioTareas, FormularioEditarTareas
 from tareasApp.models import Tarea
 from django.urls import reverse_lazy
 # Create your views here.
@@ -75,7 +75,7 @@ class TareasView(TemplateView):
         title = "Visualizador de Tareas"
         primer_nombre = request.user.first_name
         primer_apellido = request.user.last_name
-        tareas = Tarea.objects.all().order_by('-fecha_vencimiento')
+        tareas = Tarea.objects.all().order_by('fecha_vencimiento')
         context = {
             "titulo": title,
             "primer_nombre": primer_nombre,
@@ -84,51 +84,70 @@ class TareasView(TemplateView):
         }
         return render(request, self.template_name, context)
     
+class TareaDetailView(TemplateView):
+    template_name = 'detalle_tarea.html'
+    def get(self, request, pk, *args, **kwargs):
+        title = "Detalle de Tarea"
+        try:
+            tarea = Tarea.objects.get(id=pk)
+        except Tarea.DoesNotExist:
+            return render(request, 'elemento_no_existe.html')
+        context = {
+            "titulo": title,
+            "tarea": tarea
+        }
+        return render(request, self.template_name, context)
 
-class TareaCreateView(TemplateView):
+
+class TareaCreateView(View):
     template_name = 'agregar_tarea.html'
+
     def get(self, request, *args, **kwargs):
         title = "Crear Tarea"
         context = {
-            "titulo": title
+            "titulo": title,
+            'form': FormularioTareas()
         }
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        title = "Crear Tarea"
-        titulo = request.POST.get('titulo')
-        descripcion = request.POST.get('descripcion')
-        fecha = request.POST.get('fecha')
-        tarea = Tarea(titulo=titulo, descripcion=descripcion, fecha=fecha)
-        tarea.save()
+        form = FormularioTareas(request.POST, request.FILES)
+        if form.is_valid():
+            tarea = form.save(commit=False)
+            tarea.usuario = request.user
+            tarea.save()
+            request.session['mensajes'] = {'enviado': True, 'resultado': 'Has creado la tarea exitosamente'}
+            return redirect('tareas')
+        else:
+            mensajes = {'enviado': False, 'resultado': form.errors}
         context = {
-            "titulo": title
+            'title': 'Crear nueva Tarea',
+            'mensajes': mensajes,
+            'form': form
         }
         return render(request, self.template_name, context)
     
-class TareaUpdateView(TemplateView):
+class TareaUpdateView(View):
     template_name = 'editar_tarea.html'
-    def get(self, request, *args, **kwargs):
-        idtarea = kwargs['idtarea']
-        try:
-            tarea = Tarea.objects.get(id=idtarea)
-        except Tarea.DoesNotExist:
-            return render(request, 'elemento_no_existe.html')
+
+    def get(self, request, pk, *args, **kwargs):
+        tarea = get_object_or_404(Tarea, id=pk)
+        form = FormularioEditarTareas(instance=tarea)
         context = {
-            'form': FormularioTareas(instance=tarea),
-            'title': 'Editar producto',
-            'idtarea': idtarea
+            'form': form,
+            'title': f'Editar tarea {tarea.titulo}',
+            'idtarea': pk
         }
         return render(request, self.template_name, context)
 
-    def post(self, request, idtarea, *args, **kwargs):
-        tarea = get_object_or_404(Tarea, id=idtarea)
-        form = FormularioTareas(request.POST, instance=tarea)
-        if form.is_valid():
-            form.save()
-            request.session['mensajes'] = {'enviado': True, 'resultado': 'Se ha actualizado el estado de la tarea'}
-            return redirect('tareas')
-        return self.render_to_response(self.get_context_data())             
+    def post(self, request, pk, *args, **kwargs):
+            tarea = get_object_or_404(Tarea, id=pk)
+            form = FormularioEditarTareas(request.POST, instance=tarea)
+            if form.is_valid():
+                form.save()
+                request.session['mensajes'] = {'enviado': True, 'resultado': 'Se ha actualizado el estado de la tarea'}
+                return redirect(reverse('tarea', kwargs={'pk': tarea.pk}))
+            return self.render_to_response(self.get_context_data())   
 
 class TareaDeleteView(DeleteView):
     template_name = 'eliminar_tarea.html'

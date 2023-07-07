@@ -1,20 +1,25 @@
 {% extends "base.html" %}
 {%block title%}{{titulo}}{%endblock%}
 {%block content%}
-<div class="container pb-3">
-    <div class="row mt-3">
-        <div class="col-12 col-md-12">
-            <h1>Pedidos</h1>
+<div class="d-flex justify-content-center m-4">
+    <form id="formEditarTarea" method="post" action="{% url 'agregar_tarea' %} " enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for campo in form %}
+        <div class="row">
+            <div class="col-4 mb-3 fw-bold"><label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}</label></div>
+            <div class="col-8">
+                {{ campo }} 
+                {% if campo.help_text %}
+                <div class="form-text">{{ campo.help_text }}</div>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-12 col-md-12">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Guardar</button>
-                <a href="{% url 'pedidos' %}" class="btn btn-secondary">Volver</a>
-            </form>
+        {% endfor %}
+        <div class="modal-footer d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{% url 'tareas' %}" type="submit" class="btn btn-secondary">Volver</a>
         </div>
-    </div>
+    </form>
 </div>
 
 {% endblock %}

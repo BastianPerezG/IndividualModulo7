@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Group
-from tareasApp.models import Etiqueta, Estado
+from django.contrib.auth.models import User
+from tareasApp.models import Etiqueta, Estado, Tarea
 
 class FormularioLogin(forms.Form):
     username = forms.CharField(label='NombreUsuario', required=True,
@@ -98,27 +98,53 @@ class FormularioRegistro(UserCreationForm):
         model = User
         fields = ('username', 'first_name', 'last_name','email', 'password1', 'password2')
 
-class FormularioTareas(forms.Form):
-    opciones_estado = Estado.objects.all().values_list('id', 'nombre').order_by('nombre')
-    OPCIONES_ESTADO = [(1, 'Pendiente'), (2, 'En Progreso'), (3, 'Completada')]
-    opciones_etiqueta = Etiqueta.objects.all().values_list('id', 'nombre').order_by('nombre')
-    OPCIONES_ETIQUETA = [(1, 'Trabajo'), (2, 'Hogar'), (3, 'Estudio')]
+class FormularioTareas(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = ['titulo', 'fecha_vencimiento', 'estado', 'descripcion', 'etiqueta']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}),
+            'fecha': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'descripcion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descripcion', 'type': 'text'}),
+            'etiqueta': forms.Select(attrs={'class': 'form-control'})
+        }
+        labels = {
+            'titulo': 'Titulo',
+            'fecha': 'Fecha de Vencimiento',
+            'estado': 'Estado',
+            'descripcion': 'Descripcion',
+            'etiqueta': 'Etiqueta',
+        }
+        error_messages = {
+            'titulo': {'required': 'El título es requerido'},
+            'fecha': {'required': 'La fecha de vencimiento es requerida'},
+            'estado': {'required': 'El estado de la tarea es requerido'},
+            'descripcion': {'required': 'La descripción es requerida'},
+            'etiqueta': {'required': 'La etiqueta es requerida'}    
+        }
+                                
+    
 
-    id = forms.CharField(widget=forms.HiddenInput(), required=False)
-    titulo = forms.CharField(label="Titulo", required=True,
-                            error_messages={
-                                'required': 'El titulo es requerido'},
-                            widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}))
-    fecha = forms.DateField(label="FechaVencimiento", required=True,
-                            error_messages={
-                                'required': 'La fecha de vencimiento es requerida'},
-                            widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
-                            help_text='Ingrese la fecha de vencimiento de la tarea')
-    estado = forms.ChoiceField(choices=OPCIONES_ESTADO, required=True,
-                                error_messages={'required': 'El estado de la tarea es requerida'},
-                                widget=forms.Select(attrs={'class': 'form-control'}),
-                                help_text='Seleccione el estado de la tarea')
-    forma_pago = forms.ChoiceField(choices=OPCIONES_ETIQUETA, required=True,
-                                    error_messages={'required': 'La etiqueta es requerida'},
-                                    widget=forms.Select(attrs={'class': 'form-control'}),
-                                    help_text='Seleccione la etiqueta de la tarea')
+class FormularioEditarTareas(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = ['titulo', 'fecha_vencimiento', 'estado', 'etiqueta']
+        widgets = {
+            'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}),
+            'fecha_vencimiento': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'etiqueta': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'titulo': 'Titulo',
+            'fecha_vencmiento': 'Fecha de Vencimiento',
+            'estado': 'Estado',
+            'etiqueta': 'Etiqueta',
+        }
+        error_messages = {
+            'titulo': {'required': 'El título es requerido'},
+            'fecha_vencimiento': {'required': 'La fecha de vencimiento es requerida'},
+            'estado': {'required': 'El estado de la tarea es requerido'},
+            'etiqueta': {'required': 'La etiqueta es requerida'},
+        }
