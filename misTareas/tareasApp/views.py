@@ -75,7 +75,7 @@ class TareasView(TemplateView):
         title = "Visualizador de Tareas"
         primer_nombre = request.user.first_name
         primer_apellido = request.user.last_name
-        tareas = Tarea.get.all().order_by('-fecha')
+        tareas = Tarea.objects.all().order_by('-fecha_vencimiento')
         context = {
             "titulo": title,
             "primer_nombre": primer_nombre,
