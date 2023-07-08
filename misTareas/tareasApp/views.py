@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views.generic import TemplateView, DeleteView, View
 from django.contrib.auth import authenticate, login
-from tareasApp.form import FormularioLogin, FormularioRegistro, FormularioTareas, FormularioEditarTareas
+from tareasApp.form import FormularioLogin, FormularioRegistro, FormularioTareas, FormularioEditarTareas, FormularioObservaciones
 from tareasApp.models import Tarea, Etiqueta, Estado
 from django.urls import reverse_lazy
 from django.http import HttpResponse
@@ -101,17 +101,37 @@ class TareasView(TemplateView):
     
 class TareaDetailView(TemplateView):
     template_name = 'detalle_tarea.html'
+
     def get(self, request, pk, *args, **kwargs):
         title = "Detalle de Tarea"
         try:
             tarea = Tarea.objects.get(id=pk)
         except Tarea.DoesNotExist:
             return render(request, 'elemento_no_existe.html')
+        form_observacion = FormularioObservaciones()
         context = {
             "titulo": title,
-            "tarea": tarea
+            "tarea": tarea,
+            "form_observacion": form_observacion
         }
         return render(request, self.template_name, context)
+
+    def post(self, request, pk, *args, **kwargs):
+        tarea = get_object_or_404(Tarea, id=pk)
+        form_observacion = FormularioObservaciones(request.POST)
+        if form_observacion.is_valid():
+            observacion = form_observacion.cleaned_data['observaciones']
+            tarea.observaciones = observacion  
+            tarea.save()
+            return redirect('tarea', pk=pk)
+        else:
+            context = {
+                "titulo": "Detalle de Tarea",
+                "tarea": tarea,
+                "form_observacion": form_observacion
+            }
+            return render(request, self.template_name, context)
+
 
 
 class TareaCreateView(View):

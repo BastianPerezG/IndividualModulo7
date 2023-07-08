@@ -151,3 +151,17 @@ class FormularioEditarTareas(forms.ModelForm):
             'estado': {'required': 'El estado de la tarea es requerido'},
             'etiqueta': {'required': 'La etiqueta es requerida'},
         }
+
+class FormularioObservaciones(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = ['observaciones']
+        widgets = {
+            'observaciones': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Observacion', 'type': 'text'}),
+        }
+        labels = {
+            'observaciones': 'Observacion',
+        }
+        error_messages = {
+            'observaciones': {'required': 'La observacion es requerida'},
+        }

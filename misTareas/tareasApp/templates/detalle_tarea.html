@@ -23,9 +23,24 @@
                     <p class="card-text">{{ tarea.descripcion }}</p>
                     <strong><h5>Estado</h5></strong>
                     <p class="card-text">{{ tarea.estado }}</p>
+                    {% if tarea.observaciones %}
+                    <h5>Observación:</h5>
+                    <p>{{ tarea.observaciones }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="container">
+    <form method="post" action="{% url 'tarea' tarea.id %}">
+        {% csrf_token %}
+        {{ form_observacion }}
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary mt-4">Agregar Observación</button>
+        </div>
+        
+    </form>
+</div>
+
 {% endblock %}

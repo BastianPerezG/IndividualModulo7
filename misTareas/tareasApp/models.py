@@ -30,6 +30,7 @@ class Tarea(models.Model):
     titulo = models.CharField(max_length=45, null=False, blank=False)
     descripcion = models.CharField(max_length=150, null=False, blank=False)
     fecha_vencimiento = models.DateField(default=timezone.now)
+    observaciones = models.CharField(max_length=250, null=True, blank=True, default=None)
 
     def __str__(self):
         return self.titulo
