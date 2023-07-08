@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from django.contrib.auth.decorators import login_required
-from tareasApp.views import LandingPageView, RegistroView, IngresoView, TareasView, TareaCreateView, TareaDetailView, TareaUpdateView, TareaDeleteView
+from tareasApp.views import LandingPageView, RegistroView, IngresoView, TareasView, TareaCreateView, TareaDetailView, TareaUpdateView, TareaDeleteView, CompletarTareaView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +31,5 @@ urlpatterns = [
     path("tareas/<int:pk>", login_required(TareaDetailView.as_view()), name="tarea"),
     path("tareas/<int:pk>/editar", login_required(TareaUpdateView.as_view()), name="editar_tarea"),
     path("tareas/<int:pk>/eliminar", login_required(TareaDeleteView.as_view()), name="eliminar_tarea"),
+    path('tareas/<int:pk>/completar', login_required(CompletarTareaView.as_view()), name='completar_tarea'),
 ]

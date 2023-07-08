@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-{%block title%}{{titulo}}{%endblock%}
-{%block content%}
-<h1 class="text-center text-light mt-4">{{titulo}}</h1>
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<h1 class="text-center text-light mt-4">{{ titulo }}</h1>
 <div class="container pb-3">
     {% include 'mensajes.html' %}
     <div class="row mt-3 d-flex justify-content-center">
-        <div class="col-12 col-md-5 col-lg-4 ">
-            <div class="card ">
+        <div class="col-12 col-md-5 col-lg-4">
+            <div class="card">
                 <div class="card-body">
                     <strong><h4 class="card-title text-center">{{ tarea.titulo }}</h4></strong>
                     <div class="d-flex justify-content-evenly mb-3">
                         <a href="{% url 'tareas' %}" class="btn btn-primary">Volver</a>
                         <a href="{% url 'editar_tarea' tarea.id %}" class="btn btn-warning">Editar</a>
                         <a class="btn btn-danger" href="{% url 'eliminar_tarea' tarea.id %}">Eliminar</a>
-                        <a class="btn btn-success" href="">Completar</a>
+                        <a class="btn btn-success" href="{% url 'completar_tarea' tarea.id %}">Completar</a>
                     </div>
                     <strong><h5>Etiqueta</h5></strong>
                     <p class="card-text">{{ tarea.etiqueta }}</p>
@@ -28,5 +28,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login
 from tareasApp.form import FormularioLogin, FormularioRegistro, FormularioTareas, FormularioEditarTareas
 from tareasApp.models import Tarea, Etiqueta, Estado
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 # Create your views here.
 
 class LandingPageView(TemplateView):
@@ -180,3 +181,11 @@ class TareaDeleteView(DeleteView):
     template_name = 'eliminar_tarea.html'
     model = Tarea
     success_url = reverse_lazy('tareas')
+
+class CompletarTareaView(View):
+    def get(self, request, pk, *args, **kwargs):
+        tarea = get_object_or_404(Tarea, id=pk)
+        estado_completada = Estado.objects.get(nombre='Completada')
+        tarea.estado = estado_completada
+        tarea.save()
+        return redirect('tareas')
