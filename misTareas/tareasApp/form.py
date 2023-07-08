@@ -129,22 +129,25 @@ class FormularioTareas(forms.ModelForm):
 class FormularioEditarTareas(forms.ModelForm):
     class Meta:
         model = Tarea
-        fields = ['titulo', 'fecha_vencimiento', 'estado', 'etiqueta']
+        fields = ['titulo', 'fecha_vencimiento','descripcion', 'estado', 'etiqueta']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}),
             'fecha_vencimiento': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
+            'descripcion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descripcion', 'type': 'text'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'etiqueta': forms.Select(attrs={'class': 'form-control'}),
         }
         labels = {
             'titulo': 'Titulo',
             'fecha_vencmiento': 'Fecha de Vencimiento',
+            'descripcion': 'Descripcion',
             'estado': 'Estado',
             'etiqueta': 'Etiqueta',
         }
         error_messages = {
             'titulo': {'required': 'El título es requerido'},
             'fecha_vencimiento': {'required': 'La fecha de vencimiento es requerida'},
+            'descripcion': {'required': 'La descripción es requerida'},
             'estado': {'required': 'El estado de la tarea es requerido'},
             'etiqueta': {'required': 'La etiqueta es requerida'},
         }

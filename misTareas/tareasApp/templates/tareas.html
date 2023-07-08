@@ -16,7 +16,7 @@
                             <select name="id_etiqueta" class="form-select mt-4" id="id_id_etiqueta" required>
                                 <option value="" selected>Seleccione una etiqueta</option>
                                 {% for element in etiquetas %}
-                                    <option value="{{element.id}}">{{element.etiqueta}}</option>
+                                    <option value="{{ element.id }}">{{ element.nombre }}</option>
                                 {% endfor %}
                             </select>
                         </div>
