@@ -2,8 +2,8 @@
 {%block title%}{{titulo}}{%endblock%}
 {%block content%}
 
-<body>
     <div class="container pb-3">
+        {% include 'components/messages_part.html' %}
         <div class="row mt-3">
             <div class="col-12 col-md-6">
                 <h1 class="text-light">Tarea {{tarea.id}}</h1>

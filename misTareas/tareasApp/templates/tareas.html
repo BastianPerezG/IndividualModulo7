@@ -1,20 +1,39 @@
 {% extends "base.html" %}
 {%block title%}{{titulo}}{%endblock%}
 {%block content%}
-<h1 class="text-center text-light mt-4">{{titulo}}</h1>
+<div class="row mt-3">
+        <h1 class="text-light text-center">Mis Tareas</h1>
+</div>
+
 <div class="container pb-3">
     <div class="row mt-3">
-        <div class="col-12 col-md-6">
-            <h1 class="text-light">Mis Tareas</h1>
+        {% include 'mensajes.html' %}
+        <div class="col-9 col-md-9">
+            <form method="post">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-4 ">
+                            <select name="id_etiqueta" class="form-select mt-4" id="id_id_etiqueta" required>
+                                <option value="" selected>Seleccione una etiqueta</option>
+                                {% for element in etiquetas %}
+                                    <option value="{{element.id}}">{{element.etiqueta}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary mt-4">Buscar</button> <a href="{% url 'tareas' %}" class="btn btn-primary mt-4">Todas las tareas</a>
+                        </div>
+                    </div>
+            </form>
         </div>
-        <div class="col-12 col-md-6" style="text-align: right;">
-            <a href="{% url 'agregar_tarea' %}" class="btn btn-primary">Agregar Tarea</a>
+        <div class="col-3 col-md-3 mt-4" style="text-align: right;">
+            <a href="{% url 'agregar_tarea' %}" class="btn btn-success">Agregar Tarea</a>
         </div>
     </div>
     <div class="row mt-3">
         {% for tarea in tareas %}
         <div class="col-12 col-md-6 col-lg-4">
-            <div class="card">
+            <div class="card mt-4">
                 <div class="card-body">
                     <h5 class="card-title text-center">{{ tarea.titulo }}</h5>
                     <h6>Fecha Vencimiento</h6>

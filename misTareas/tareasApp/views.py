@@ -106,7 +106,8 @@ class TareaCreateView(View):
         title = "Crear Tarea"
         context = {
             "titulo": title,
-            'form': FormularioTareas()
+            'form': FormularioTareas(),
+            'accion': 'crear'
         }
         return render(request, self.template_name, context)
 
@@ -123,12 +124,13 @@ class TareaCreateView(View):
         context = {
             'title': 'Crear nueva Tarea',
             'mensajes': mensajes,
-            'form': form
+            'form': form,
+            
         }
         return render(request, self.template_name, context)
     
 class TareaUpdateView(View):
-    template_name = 'editar_tarea.html'
+    template_name = 'agregar_tarea.html'
 
     def get(self, request, pk, *args, **kwargs):
         tarea = get_object_or_404(Tarea, id=pk)
@@ -136,7 +138,8 @@ class TareaUpdateView(View):
         context = {
             'form': form,
             'title': f'Editar tarea {tarea.titulo}',
-            'idtarea': pk
+            'idtarea': pk,
+            'accion': 'editar'
         }
         return render(request, self.template_name, context)
 

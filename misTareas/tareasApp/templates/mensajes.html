@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-center m-4">
+    {% if mensajes and mensajes.enviado == True %}
+        <div class="alert alert-success mt-3 alert-dismissible fade show" role="alert">
+            {{ mensajes.resultado }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    {% endif %}
+    {% if mensajes and mensajes.enviado == False %}
+        <div class="alert alert-danger mt-3 alert-dismissible fade show" role="alert">
+            Error, no se han ingresado los siguientes campos:
+            {% for element in mensajes.resultado %}
+                {{element}}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    {% endif %}
+</div>

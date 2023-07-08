@@ -2,24 +2,32 @@
 {%block title%}{{titulo}}{%endblock%}
 {%block content%}
 <div class="d-flex justify-content-center m-4">
-    <form id="formEditarTarea" method="post" action="{% url 'agregar_tarea' %} " enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for campo in form %}
-        <div class="row">
-            <div class="col-4 mb-3 fw-bold"><label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}</label></div>
-            <div class="col-8">
-                {{ campo }} 
-                {% if campo.help_text %}
-                <div class="form-text">{{ campo.help_text }}</div>
-                {% endif %}
+    <div class="row">
+        <div class="text-center">
+            <p class="fs-2 text-light">{% if accion == 'crear' %}Añadir{% elif accion == 'editar' %}Editar{% endif %} Tarea</p> 
+        </div>
+
+        <form id="formEditarTarea" method="post" action="{% url 'agregar_tarea' %} " enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for campo in form %}
+            <div class="row">
+                <div class="col-4 mb-3 fw-bold"><label for="{{ campo.id_for_label }}" class="form-label">{{ campo.label }}</label></div>
+                <div class="col-8">
+                    {{ campo }} 
+                    {% if campo.help_text %}
+                    <div class="form-text">{{ campo.help_text }}</div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        {% endfor %}
-        <div class="modal-footer d-flex justify-content-center mt-3">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{% url 'tareas' %}" type="submit" class="btn btn-secondary">Volver</a>
-        </div>
-    </form>
+            {% endfor %}
+            <div class="modal-footer d-flex justify-content-center mt-3">
+                <a href="{% url 'tareas' %}" type="submit" class="btn btn-secondary">Volver</a>
+                <button type="submit" class="btn btn-primary ms-3">Guardar</button>
+
+            </div>
+        </form>
 </div>
+</div>
+
 
 {% endblock %}
