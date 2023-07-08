@@ -71,20 +71,32 @@ class RegistroView(TemplateView):
     
 class TareasView(TemplateView):
     template_name = 'tareas.html'
+
     def get(self, request, *args, **kwargs):
-        title = "Visualizador de Tareas"
-        primer_nombre = request.user.first_name
-        primer_apellido = request.user.last_name
-        tareas = Tarea.objects.all().order_by('fecha_vencimiento')
+        id_busqueda = request.session.get('id_busqueda', 0)
+        if id_busqueda == 0:
+            tareas = Tarea.objects.filter(usuario_id=request.user.id).order_by('fecha_vencimiento')
+        else:
+            tareas = Tarea.objects.filter(usuario_id=request.user.id, etiqueta_id=id_busqueda).order_by('fecha_vencimiento')
+        request.session.pop('id_busqueda', None)
         context = {
-            "titulo": title,
-            "primer_nombre": primer_nombre,
-            "primer_apellido": primer_apellido,
-            "tareas" : tareas,
-            'etiquetas' : Etiqueta.objects.all().order_by('id'),
-            'estados' : Estado.objects.all().order_by('id'),
+            'titulo': 'Visualizador de Tareas',
+            'primer_nombre': request.user.first_name,
+            'primer_apellido': request.user.last_name,
+            'tareas': tareas,
+            'etiquetas': Etiqueta.objects.all().order_by('id'),
+            'estados': Estado.objects.all().order_by('id'),
+            'mensajes': request.session.get('mensajes', None),
         }
+        request.session.pop('mensajes', None)
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        request.session['mensajes'] = {'enviado': True, 'resultado': 'Se ha filtrado la búsqueda'}
+        request.session['id_busqueda'] = request.POST.get('id_etiqueta')
+        return redirect('tareas')
+
+
     
 class TareaDetailView(TemplateView):
     template_name = 'detalle_tarea.html'

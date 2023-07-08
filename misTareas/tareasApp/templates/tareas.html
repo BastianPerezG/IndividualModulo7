@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{%block title%}{{titulo}}{%endblock%}
-{%block content%}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
 <div class="row mt-3">
         <h1 class="text-light text-center">Mis Tareas</h1>
 </div>
@@ -12,7 +12,7 @@
             <form method="post">
                 {% csrf_token %}
                     <div class="row">
-                        <div class="col-4 ">
+                        <div class="col-4">
                             <select name="id_etiqueta" class="form-select mt-4" id="id_id_etiqueta" required>
                                 <option value="" selected>Seleccione una etiqueta</option>
                                 {% for element in etiquetas %}
@@ -21,7 +21,16 @@
                             </select>
                         </div>
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary mt-4">Buscar</button> <a href="{% url 'tareas' %}" class="btn btn-primary mt-4">Todas las tareas</a>
+                            <select name="id_estado" class="form-select mt-4" id="id_id_estado" required>
+                                <option value="" selected>Seleccione un estado</option>
+                                {% for element in estados %}
+                                    <option value="{{ element.id }}">{{ element.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary mt-4">Filtrar</button>
+                            <a href="{% url 'tareas' %}" class="btn btn-primary mt-4 ms-3">Todas las tareas</a>
                         </div>
                     </div>
             </form>
@@ -51,5 +60,4 @@
         {% endfor %}
     </div>
 </div>
-
-{%endblock%}
+{% endblock %}
