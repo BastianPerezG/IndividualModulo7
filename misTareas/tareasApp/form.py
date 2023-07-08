@@ -99,43 +99,52 @@ class FormularioRegistro(UserCreationForm):
         fields = ('username', 'first_name', 'last_name','email', 'password1', 'password2')
 
 class FormularioTareas(forms.ModelForm):
+    usuario_destinatario = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        label='Usuario Destinatario',
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
     class Meta:
         model = Tarea
-        fields = ['titulo', 'fecha_vencimiento', 'estado', 'descripcion', 'etiqueta']
+        fields = ['titulo', 'fecha_vencimiento', 'estado', 'descripcion', 'etiqueta', 'prioridad']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}),
-            'fecha': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
+            'fecha_vencimiento': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'descripcion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descripcion', 'type': 'text'}),
-            'etiqueta': forms.Select(attrs={'class': 'form-control'})
+            'etiqueta': forms.Select(attrs={'class': 'form-control'}),
+            'prioridad': forms.Select(attrs={'class': 'form-control'})
         }
         labels = {
             'titulo': 'Titulo',
-            'fecha': 'Fecha de Vencimiento',
+            'fecha_vencimiento': 'Fecha de Vencimiento',
             'estado': 'Estado',
             'descripcion': 'Descripcion',
             'etiqueta': 'Etiqueta',
+            'prioridad': 'Prioridad'
         }
         error_messages = {
             'titulo': {'required': 'El título es requerido'},
-            'fecha': {'required': 'La fecha de vencimiento es requerida'},
+            'fecha_vencimiento': {'required': 'La fecha de vencimiento es requerida'},
             'estado': {'required': 'El estado de la tarea es requerido'},
             'descripcion': {'required': 'La descripción es requerida'},
-            'etiqueta': {'required': 'La etiqueta es requerida'}    
+            'etiqueta': {'required': 'La etiqueta es requerida'},
+            'prioridad': {'required': 'La prioridad es requerida'}
         }
-                                
     
 
 class FormularioEditarTareas(forms.ModelForm):
     class Meta:
         model = Tarea
-        fields = ['titulo', 'fecha_vencimiento','descripcion', 'estado', 'etiqueta']
+        fields = ['titulo', 'fecha_vencimiento','descripcion', 'estado', 'etiqueta', 'prioridad']
         widgets = {
             'titulo': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titulo', 'type': 'text'}),
             'fecha_vencimiento': forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'Fecha', 'type': 'date'}),
             'descripcion': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Descripcion', 'type': 'text'}),
             'estado': forms.Select(attrs={'class': 'form-control'}),
             'etiqueta': forms.Select(attrs={'class': 'form-control'}),
+            'prioridad': forms.Select(attrs={'class': 'form-control'})
         }
         labels = {
             'titulo': 'Titulo',
@@ -143,6 +152,7 @@ class FormularioEditarTareas(forms.ModelForm):
             'descripcion': 'Descripcion',
             'estado': 'Estado',
             'etiqueta': 'Etiqueta',
+            'prioridad': 'Prioridad'
         }
         error_messages = {
             'titulo': {'required': 'El título es requerido'},
@@ -150,6 +160,7 @@ class FormularioEditarTareas(forms.ModelForm):
             'descripcion': {'required': 'La descripción es requerida'},
             'estado': {'required': 'El estado de la tarea es requerido'},
             'etiqueta': {'required': 'La etiqueta es requerida'},
+            'prioridad': {'required': 'La prioridad es requerida'}
         }
 
 class FormularioObservaciones(forms.ModelForm):

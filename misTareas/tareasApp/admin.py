@@ -1,5 +1,5 @@
 from django.contrib import admin
-from tareasApp.models import Etiqueta, Estado, Tarea
+from tareasApp.models import Etiqueta, Estado, Tarea, Prioridad
 # Register your models here.
 
 class Etiquetas_Admin(admin.ModelAdmin):             # Admin de etiquetas
@@ -25,3 +25,12 @@ class Tarea_Admin(admin.ModelAdmin):             # Admin de tareas
     fields = ['usuario', 'titulo', 'descripcion', 'fecha_vencimiento', 'etiqueta', 'estado']
 
 admin.site.register(Tarea, Tarea_Admin)
+
+
+class Prioridad_Admin(admin.ModelAdmin):             # Admin de prioridades
+    list_display = ['nombre']
+    search_fields = ['nombre']
+    ordering = ['nombre']
+    fields = ['nombre']
+
+admin.site.register(Prioridad, Prioridad_Admin)

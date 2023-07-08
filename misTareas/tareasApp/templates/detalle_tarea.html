@@ -23,6 +23,18 @@
                     <p class="card-text">{{ tarea.descripcion }}</p>
                     <strong><h5>Estado</h5></strong>
                     <p class="card-text">{{ tarea.estado }}</p>
+                    <strong><h5>Prioridad</h5></strong>
+                    <div class="col-3">
+                        {% if prioridad == 'Alta' %}
+                            <p style="color: red" class="fw-bold card-text">{{ prioridad }}</p>
+                        {% elif prioridad == 'Media' %}
+                            <p style="color: blue" class="fw-bold card-text">{{ prioridad }}</p>
+                        {% elif prioridad == 'Baja' %}
+                            <p style="color: green" class="fw-bold card-text">{{ prioridad }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    
                     {% if tarea.observaciones %}
                     <h5>Observación:</h5>
                     <p>{{ tarea.observaciones }}</p>

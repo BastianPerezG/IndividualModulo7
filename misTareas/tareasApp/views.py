@@ -80,22 +80,26 @@ class TareasView(TemplateView):
         else:
             tareas = Tarea.objects.filter(usuario_id=request.user.id, etiqueta_id=id_busqueda).order_by('fecha_vencimiento')
         request.session.pop('id_busqueda', None)
+
+        tareas_con_prioridad = []  # Lista para almacenar las tareas con información de prioridad
+        for tarea in tareas:
+            tarea_info = {
+                'tarea': tarea,
+                'prioridad': tarea.prioridad.nombre  # Accede al nombre de la prioridad
+            }
+            tareas_con_prioridad.append(tarea_info)
+
         context = {
             'titulo': 'Visualizador de Tareas',
             'primer_nombre': request.user.first_name,
             'primer_apellido': request.user.last_name,
-            'tareas': tareas,
+            'tareas': tareas_con_prioridad,  # Pasamos la lista de tareas con prioridad al contexto
             'etiquetas': Etiqueta.objects.all().order_by('id'),
             'estados': Estado.objects.all().order_by('id'),
             'mensajes': request.session.get('mensajes', None),
         }
         request.session.pop('mensajes', None)
         return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        request.session['mensajes'] = {'enviado': True, 'resultado': 'Se ha filtrado la búsqueda'}
-        request.session['id_busqueda'] = request.POST.get('id_etiqueta')
-        return redirect('tareas')
 
 
     
@@ -112,7 +116,8 @@ class TareaDetailView(TemplateView):
         context = {
             "titulo": title,
             "tarea": tarea,
-            "form_observacion": form_observacion
+            "form_observacion": form_observacion,
+            "prioridad": tarea.prioridad.nombre  
         }
         return render(request, self.template_name, context)
 
@@ -121,18 +126,17 @@ class TareaDetailView(TemplateView):
         form_observacion = FormularioObservaciones(request.POST)
         if form_observacion.is_valid():
             observacion = form_observacion.cleaned_data['observaciones']
-            tarea.observaciones = observacion  
+            tarea.observaciones = observacion
             tarea.save()
             return redirect('tarea', pk=pk)
         else:
             context = {
                 "titulo": "Detalle de Tarea",
                 "tarea": tarea,
-                "form_observacion": form_observacion
+                "form_observacion": form_observacion,
+                "prioridad": tarea.id_prioridad  # Agrega la prioridad al contexto
             }
             return render(request, self.template_name, context)
-
-
 
 class TareaCreateView(View):
     template_name = 'agregar_tarea.html'
@@ -150,7 +154,7 @@ class TareaCreateView(View):
         form = FormularioTareas(request.POST, request.FILES)
         if form.is_valid():
             tarea = form.save(commit=False)
-            tarea.usuario = request.user
+            tarea.usuario = form.cleaned_data['usuario_destinatario']
             tarea.save()
             request.session['mensajes'] = {'enviado': True, 'resultado': 'Has creado la tarea exitosamente'}
             return redirect('tareas')
@@ -160,10 +164,10 @@ class TareaCreateView(View):
             'title': 'Crear nueva Tarea',
             'mensajes': mensajes,
             'form': form,
-            
         }
         return render(request, self.template_name, context)
     
+
 class TareaUpdateView(View):
     template_name = 'agregar_tarea.html'
 
